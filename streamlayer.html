@@ -47,7 +47,7 @@
     "esri/layers/StreamLayer",
     "dojo/domReady!"
   ], function(Map, InfoTemplate, StreamLayer){
-      var url = "http://ec2-75-101-155-202.compute-1.amazonaws.com:6080/arcgis/rest/services/AsdiTracks/StreamServer";
+      var url = "http://ec2-75-101-155-202.compute-1.amazonaws.com:6080/arcgis/rest/services/ASDITrackInformation/StreamServer";
 
       var streamLayer = new StreamLayer(url, {
         infoTemplate: new InfoTemplate("Attributes", "${*}")
