@@ -1,0 +1,126 @@
+.cards-list {
+    margin: 0;
+    padding: 0; }
+.cards-list > li {
+    float: left;
+    padding: 0 15px; }
+.cards-list li {
+    list-style: none; }
+
+.card {
+    position: relative;
+    display: inline-block;
+    padding: 20px;
+    margin-bottom: 40px;
+    background-color: white;
+    border: 1px solid #cccccc;
+    text-align: center;
+    width: 255px;
+    height: 296px; }
+.card img {
+    height: 133px;
+    max-width: 200px; }
+.card hr {
+    margin: 1.7rem -1.7rem;
+    border-top: 1px solid #e7e7e7; }
+.card h6 {
+    font-weight: 400;
+    color: #4c4c4c;
+    display: block;
+    display: -webkit-box;
+    height: 4rem;
+    line-height: 1.55rem;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis; }
+
+.card-info {
+    left: 0;
+    padding: 0 2px;
+    margin: 0;
+    width: 100%;
+    line-height: 1.7rem;
+    color: #6e6e6e;
+    font-size: 1.3rem; }
+.card-info li {
+    display: inline; }
+.card-info li:first-of-type:after {
+    content: " • "; }
+
+.card-options {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    color: white;
+    opacity: 0;
+    background: linear-gradient(rgba(0, 0, 0, 0.6) 0, rgba(0, 0, 0, 0.6) 172px, transparent 173px, rgba(255, 255, 255, 0) 100%);
+    transition: opacity ease-in-out 400ms; }
+.card-options .glyphicon {
+    visibility: hidden;
+    right: -30px;
+    margin-left: 10px;
+    transition: 600ms; }
+.card-options .glyphicon:nth-child(2) {
+    transition: 900ms; }
+.card-options .glyphicon:nth-child(3) {
+    transition: 1200ms; }
+.card-options .glyphicon:nth-child(4) {
+    transition: 1500ms; }
+.card-options:hover {
+    opacity: 1;
+    cursor: pointer;
+    box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.2); }
+.card-options:hover > button {
+    transform: translateY(30px);
+    visibility: visible; }
+.card-options:hover .glyphicon {
+    transform: translateX(-30px);
+    visibility: visible; }
+.card-options:hover li {
+    visibility: visible; }
+.card-options ul {
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    color: white;
+    font-size: 12px }
+.card-options ul li {
+    visibility: hidden;
+    width: 1.7rem;
+    float: right;
+    margin-right: -.12rem;
+    cursor: pointer;
+    visibility: hidden; }
+.card-options button {
+    background: rgba(255, 255, 255, 0.1);
+    display: inline-block;
+    padding: 10px;
+    margin-top: 2.4rem;
+    text-decoration: none;
+    border: 1px solid white;
+    color: white;
+    cursor: pointer;
+    transition: 300ms;
+    visibility: hidden;
+    font-size: 1.5rem;
+    line-height: 1.6rem; }
+.card-options button:hover {
+    text-decoration: none;
+    border: 1px solid white;
+    color: white;
+    background: rgba(255, 255, 255, 0.3); }
+
+path {
+    fill: #4d4d4d;
+    fill-opacity: .5;
+    stroke: #fff;
+    stroke-width: 1px;
+}
+
+line {
+    stroke: #999;
+    stroke-width: 0;
+}

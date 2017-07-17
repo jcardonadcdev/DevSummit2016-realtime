@@ -3,55 +3,64 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no"/>
-    <title>StreamLayer-Static Geometry Use Case</title>
-    <link rel="stylesheet" href="https://js.arcgis.com/3.16/esri/css/esri.css">
-    <style type="text/css">
-      html, body {
-        height: 100%;
-        width: 100%;
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-      }
-
-      .banner {
-        margin-top: 5px;
-        margin-bottom: 5px;
-        color: #000080;
-        font-size: 2em;
-        font-weight: bold;
-      }
-
-      .connected {
-        background-color: #008000;
-      }
-
-      .disconnected {
-        background-color: #800010;
-      }
-
-      #mapDiv {
-        width: 100%;
-        height: 80%;
-      }
-
-      #txtWsUrl {
-        width: 700px;
-        color: #ffffff;
-      }
-    </style>
+    <title>StreamLayer-Static Geometries</title>
+    <link rel="stylesheet" href="http://js.arcgis.com/3.16/esri/css/esri.css">
+    <link rel="shortcut icon" href="./assets/img/favicon.ico">
+    <link rel="stylesheet" href="./assets/css/all.css">
     <script src="https://js.arcgis.com/3.16/"></script>
   </head>
-  <body>
-    <div class="banner">
-      Stream Layer: Static Observation Points with Updating Attributes
-    </div>
-    <div id="mapDiv"></div>
-    <div>
-      <span>Stream service url: </span><input type="text" id="txtWsUrl" class="disconnected" /><br>
-      <span>
-        <input type="button" id="cmdToggleStream" value="Start Stream" />
-      </span>
+  <body class="tundra">
+    <div class="wrapper">
+      <div class="drawer drawer-left js-drawer" data-drawer="top-nav">
+        <nav class="drawer-nav">
+          <aside class="side-nav">
+            <h2 class="side-nav-title padding-leader-half padding-trailer-half text-large">Esri Patterns</h2>
+            <div class="panel padding-trailer-half padding-leader-half">
+              <label class="trailer-0">
+                <input type='search' placeholder='Search'>
+              </label>
+            </div>
+            <a href="#" class="side-nav-link padding-trailer-half padding-leader-half">Branding</a>
+            <a href="../../" class="side-nav-link padding-trailer-half padding-leader-half">Web</a>
+            <a href="#" class="side-nav-link padding-trailer-half padding-leader-half">Mobile</a>
+            <a href="#" class="side-nav-link padding-trailer-half padding-leader-half">Presentations</a>
+          </aside>
+        </nav>
+      </div>
+      <div class="drawer drawer-right js-drawer" data-drawer="user-nav">
+        <nav class="drawer-nav">
+          <aside class="side-nav">
+            <h2 class="side-nav-title padding-leader-half padding-trailer-half text-large">Sloth Aldrin</h2>
+            <a href="#" class="side-nav-link padding-trailer-half padding-leader-half">User Settings</a>
+            <a href="#" class="side-nav-link padding-trailer-half padding-leader-half">Logout</a>
+          </aside>
+        </nav>
+      </div>
+      <header class="top-nav">
+        <a class="skip-to-content" href="#skip-to-content">Skip To Content</a>
+        <div class="grid-container">
+          <div class="column-24">
+            <a href="./index.html" class="top-nav-title tablet-hide">Esri Developer Summit 2016</a>
+            <a href="/" class="icon-ui-menu top-nav-title js-drawer-toggle tablet-show" data-drawer="top-nav">Esri Developer Summit 2016</a>
+          </div>
+        </div>
+      </header>
+      <header class="sub-nav">
+        <div class="grid-container">
+          <h1 class="sub-nav-title text-white">Stream Layer: Static Geometries with Changing Attributes</h1>
+        </div>
+      </header>
+      <div class="grid-container">
+        <main class="column-24">
+          <div class="leader-1">
+            <button id="cmdToggleStream" class="btn btn-red btn-arrow right">Start Stream</button>
+            <a id="urlLink" target="_blank" class="column-6 right">View Stream Service REST endpoint</a>
+          </div>
+          <div class="leader-0">
+            <div id="mapDiv" class="column-24 leader-0"></div>
+          </div>
+        </main>
+      </div>
     </div>
   </body>
   <script>
@@ -73,7 +82,7 @@
         var map,
           streamLayer;
 
-        dom.byId("txtWsUrl").value = url;
+        dom.byId("urlLink").href = url;
         on(dom.byId("cmdToggleStream"), "click", toggleStreamLayer);
 
         map = new Map("mapDiv", {
@@ -92,8 +101,6 @@
         }
 
         function connectStreamLayer(){
-          var url = dom.byId("txtWsUrl").value;
-
           streamLayer = new StreamLayer(url, {
             purgeOptions: { displayCount: 10000 },
             outFields: ["*"],
@@ -102,13 +109,13 @@
           map.addLayer(streamLayer);
 
           streamLayer.on("connect", function(){
-            dom.byId("cmdToggleStream").value = "Stop Stream";
-            domClass.replace("txtWsUrl", "connected", "disconnected");
+            dom.byId("cmdToggleStream").innerHTML = "Stop Stream";
+            domClass.replace("cmdToggleStream", "btn btn-green btn-arrow right", "btn btn-red btn-arrow right");
           });
 
           streamLayer.on("disconnect", function(){
-            dom.byId("cmdToggleStream").value = "Start Stream";
-            domClass.replace("txtWsUrl", "disconnected", "connected");
+            dom.byId("cmdToggleStream").innerHTML = "Start Stream";
+            domClass.replace("cmdToggleStream", "btn btn-red btn-arrow right", "btn btn-green btn-arrow right");
           });
 
           streamLayer.on("error", function(err){

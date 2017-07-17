@@ -3,68 +3,79 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no"/>
-  <title>StreamLayer-Message Event</title>
-  <link rel="stylesheet" href="https://js.arcgis.com/3.16/esri/css/esri.css">
-  <style type="text/css">
-    html, body {
-      height: 100%;
-      width: 100%;
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-    }
-
-    .banner {
-      margin-top: 5px;
-      margin-bottom: 5px;
-      color: #000080;
-      font-size: 2em;
-      font-weight: bold;
-    }
-
-    .bordered{
-      border-color: #dcdcdc;
-      border-style: solid;
-      border-width: thin;
-      padding: 10px;
-    }
-
-    .control{
-      float: left;
-      width: 25%;
-      height:15px;
-      text-align: center;
-      text-wrap: normal;
-    }
-
-    .padded {
-      margin-left: 10px;
-      padding-top: 10px;
-    }
-
-    #mapDiv {
-      width: 100%;
-      height: 70%;
-    }
-  </style>
+  <title>StreamLayer-Filtering</title>
+  <link rel="stylesheet" href="http://js.arcgis.com/3.16/esri/css/esri.css">
+  <link rel="shortcut icon" href="./assets/img/favicon.ico">
+  <link rel="stylesheet" href="./assets/css/all.css">
   <script src="https://js.arcgis.com/3.16/"></script>
 </head>
-<body>
-<div class="banner">
-  Stream Layer: Message Event
-</div>
-<div id="mapDiv"></div>
-<div class="padded" id="divFilterControls" style="position: relative;">
-  <div class="control bordered">
-    <span>Less than 18000 feet: </span>
-    <span id="lt18000"></span>
+<body class="tundra">
+  <div class="wrapper">
+    <div class="drawer drawer-left js-drawer" data-drawer="top-nav">
+      <nav class="drawer-nav">
+        <aside class="side-nav">
+          <h2 class="side-nav-title padding-leader-half padding-trailer-half text-large">Esri Patterns</h2>
+          <div class="panel padding-trailer-half padding-leader-half">
+            <label class="trailer-0">
+              <input type='search' placeholder='Search'>
+            </label>
+          </div>
+          <a href="#" class="side-nav-link padding-trailer-half padding-leader-half">Branding</a>
+          <a href="../../" class="side-nav-link padding-trailer-half padding-leader-half">Web</a>
+          <a href="#" class="side-nav-link padding-trailer-half padding-leader-half">Mobile</a>
+          <a href="#" class="side-nav-link padding-trailer-half padding-leader-half">Presentations</a>
+        </aside>
+      </nav>
+    </div>
+    <div class="drawer drawer-right js-drawer" data-drawer="user-nav">
+      <nav class="drawer-nav">
+        <aside class="side-nav">
+          <h2 class="side-nav-title padding-leader-half padding-trailer-half text-large">Sloth Aldrin</h2>
+          <a href="#" class="side-nav-link padding-trailer-half padding-leader-half">User Settings</a>
+          <a href="#" class="side-nav-link padding-trailer-half padding-leader-half">Logout</a>
+        </aside>
+      </nav>
+    </div>
+    <header class="top-nav">
+      <a class="skip-to-content" href="#skip-to-content">Skip To Content</a>
+      <div class="grid-container">
+        <div class="column-24">
+          <a href="./index.html" class="top-nav-title tablet-hide">Esri Developer Summit 2016</a>
+          <a href="/" class="icon-ui-menu top-nav-title js-drawer-toggle tablet-show" data-drawer="top-nav">Esri Developer Summit 2016</a>
+        </div>
+      </div>
+    </header>
+    <header class="sub-nav">
+      <div class="grid-container">
+        <h1 class="sub-nav-title text-white">Stream Layer: Message Event</h1>
+      </div>
+    </header>
+    <div class="grid-container">
+      <main class="column-24">
+        <div class="leader-1">
+          <div class="column-7">
+            <span class="content-bold text-darker-gray">
+              Flights at Less Than 18000 Feet:
+            </span>
+            <span id="lt18000" class="content-bold">0</span>
+          </div>
+          <div class="column-7">
+            <span class="content-bold text-darker-gray">
+              Flights at Greater Than 18000 Feet:
+            </span>
+            <span id="gt18000" class="content-bold">0</span>
+          </div>
+          <div class="column-10 leader-0">
+            <button id="cmdToggleStream" class="btn btn-red btn-arrow right">Start Stream</button>
+            <a id="urlLink" target="_blank" class="column-6 right">View Stream Service REST endpoint</a>
+          </div>
+        </div>
+        <div class="leader-0">
+          <div id="mapDiv" class="column-24 leader-0"></div>
+        </div>
+      </main>
+    </div>
   </div>
-  <div class="control bordered">
-    <span>Greater than 18000 feet: </span>
-    <span id="gt18000"></span>
-  </div>
-</div>
-
 </body>
 <script>
   require([
@@ -82,6 +93,10 @@
       dom, domClass, on){
 
     var url = "http://ec2-75-101-155-202.compute-1.amazonaws.com:6080/arcgis/rest/services/ASDITrackInformation/StreamServer";
+    dom.byId("urlLink").href = url;
+
+    on(dom.byId("cmdToggleStream"), "click", toggleStreamLayer);
+
     var map,
         streamLayer,
         flights = {},
@@ -97,7 +112,16 @@
       zoom: 3
     });
 
-    connectStreamLayer();
+    //connectStreamLayer();
+
+    function toggleStreamLayer(){
+      if (streamLayer){
+        disconnectStreamLayer();
+      }
+      else{
+        connectStreamLayer();
+      }
+    }
 
     function connectStreamLayer(){
       streamLayer = new StreamLayer(url, {
@@ -105,32 +129,55 @@
         outFields: ["*"],
         infoTemplate: new InfoTemplate("Attributes", "${*}")
       });
+
+      streamLayer.on("connect", function(){
+        dom.byId("cmdToggleStream").innerHTML = "Stop Stream";
+        domClass.replace("cmdToggleStream", "btn btn-green btn-arrow right", "btn btn-red btn-arrow right");
+      });
+
+      streamLayer.on("disconnect", function(){
+        dom.byId("cmdToggleStream").innerHTML = "Start Stream";
+        domClass.replace("cmdToggleStream", "btn btn-red btn-arrow right", "btn btn-green btn-arrow right");
+      });
+
       map.addLayer(streamLayer);
 
       streamLayer.on("error", function(err){
         console.log("error: ", err);
       });
 
-      streamLayer.on("message", function(evt){
-        var id = evt.attributes.FltId,
-            alt = evt.attributes.AltitudeFeet,
-            oldalt = flights.hasOwnProperty(id) ? flights[id] : -1;
-        if(oldalt < 0) {
-          flights[id] = alt;
-        }
-        else {
-          oldalt < 18000 ? ltCnt-- : gtCnt--;
-        }
-
-        if (alt > 18000) {
-          gtCnt++;
-        }
-        else{
-          ltCnt++
-        }
-      });
+      streamLayer.on("message", processMessage);
 
       intervalTimer = setInterval(updateCounts, 1000);
+    }
+
+    function disconnectStreamLayer(){
+      if(streamLayer){
+        map.removeLayer(streamLayer);
+        streamLayer = null;
+        gtCnt = 0;
+        ltCnt = 0;
+        updateCounts();
+      }
+    }
+
+    function processMessage(evt){
+      var id = evt.attributes.FltId,
+          alt = evt.attributes.AltitudeFeet,
+          oldalt = flights.hasOwnProperty(id) ? flights[id] : -1;
+      if(oldalt < 0) {
+        flights[id] = alt;
+      }
+      else {
+        oldalt < 18000 ? ltCnt-- : gtCnt--;
+      }
+
+      if (alt > 18000) {
+        gtCnt++;
+      }
+      else{
+        ltCnt++
+      }
     }
 
     function updateCounts(){

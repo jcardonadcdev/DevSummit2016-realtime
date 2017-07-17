@@ -1,94 +1,155 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
-    <meta charset=utf-8" />
-    <title>Test Web Sockets</title>
-    <script>
-      var connection,
-        msgcount = 0;
-
-      function connectSocket(){
-        //check if browser supports web sockets
-        if ("WebSocket" in window){
-          try{
-            //get web socket url and make new WebSocket using url entered in textbox
-            var host = document.getElementById("txtSocketHost").value;
-            connection = new WebSocket(host);
-            console.log(connection.readyState);
-
-            //handle web socket's events
-            connection.onopen = function(){
-              setUI(true);
-              addToLog("Opened Web Socket");
-            };
-            connection.onclose = function(m){
-              setUI(false);
-              addToLog("Closed web socket: " + JSON.stringify(m));
-              console.log("Closed: ", m);
-              msgcount = 0;
-            };
-            connection.onerror = function(err){
-              setUI(false);
-              msgcount = 0;
-              addToLog("Error: " + JSON.stringify(err));
-              console.log("Error: ", err);
-            };
-
-            /* onmessage gets an object that has a data property that contains the actual message.
-             *
-             * The message from GeoEvent processor should be an array of feature JSON
-             */
-            connection.onmessage = function(e){
-              var msg = JSON.parse(e.data);
-              addToLog("Message received: " + JSON.stringify(msg));
-            };
-          }
-          catch(err){
-            addToLog("Error creating websocket connection: " + err.toString());
-          }
-        }
-        else{
-          addToLog("WebSocket not supported");
-        }
-      }
-
-      function disconnectSocket(){
-        connection.close();
-      }
-
-      function clearLog(){
-        txtLog.value = "";
-      }
-
-      function addToLog(msg){
-        txtLog.value = txtLog.value + "\n\n" + msgcount + ": " + msg;
-        msgcount++;
-      }
-
-      //change UI to reflect connected or disconnected state
-      function setUI(connected){
-        document.getElementById("cmdDisconnect").disabled = ! connected;
-        document.getElementById("cmdConnect").disabled = connected;
-        document.getElementById("txtSocketHost").style.backgroundColor = connected ? "#008000" : "#ff0000";
-      }
-    </script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no"/>
+    <title>Test Web Socket</title>
+    <link rel="shortcut icon" href="./assets/img/favicon.ico">
+    <link rel="stylesheet" href="./assets/css/all.css">
   </head>
   <body>
-    <div style="width: 100%; position:relative; padding-bottom: 5px">
-      <span>Websocket url: </span>
-      <input type="text"
-             value="ws://EC2-75-101-155-202.COMPUTE-1.AMAZONAWS.COM:6180/arcgis/ws/services/ASDITrackInformation/StreamServer/subscribe"
-             id="txtSocketHost" style="font-size:12pt; width: 80%; background-color: #ffffff" /><br/>
-      <input type="button" id="cmdConnect" value="ConnectWS" onclick="connectSocket();"/>
-      <input type="button" id="cmdDisconnect" value="DisconnectWS" onclick="disconnectSocket();" disabled="disabled"/>
-    </div>
-    <div style="width: 100%; position: relative; left: 0px; top: 0px;">
-      <div style="width:100%; position: absolute; left: 0px; top:0px; background-color: #dcdcdc">
-        <p style="padding-left: 10px">Messages received</p>
-        <textarea id="txtLog" wrap="soft" style="width:99%;" rows="30">
-        </textarea><br/>
-        <input type="button" id="cmdClear" value="Clear Log" onclick="clearLog();"/>
+    <div class="wrapper">
+      <div class="drawer drawer-left js-drawer" data-drawer="top-nav">
+        <nav class="drawer-nav">
+          <aside class="side-nav">
+            <h2 class="side-nav-title padding-leader-half padding-trailer-half text-large">Esri Patterns</h2>
+            <div class="panel padding-trailer-half padding-leader-half">
+              <label class="trailer-0">
+                <input type='search' placeholder='Search'>
+              </label>
+            </div>
+            <a href="#" class="side-nav-link padding-trailer-half padding-leader-half">Branding</a>
+            <a href="../../" class="side-nav-link padding-trailer-half padding-leader-half">Web</a>
+            <a href="#" class="side-nav-link padding-trailer-half padding-leader-half">Mobile</a>
+            <a href="#" class="side-nav-link padding-trailer-half padding-leader-half">Presentations</a>
+          </aside>
+        </nav>
+      </div>
+      <header class="top-nav">
+        <div class="grid-container">
+          <div class="column-24">
+            <a href="./index.html" class="top-nav-title tablet-hide">Esri Developer Summit 2016</a>
+            <a href="/" class="icon-ui-menu top-nav-title js-drawer-toggle tablet-show" data-drawer="top-nav">Esri Developer Summit 2016</a>
+          </div>
+        </div>
+      </header>
+      <header class="sub-nav">
+        <div class="grid-container">
+          <h1 class="sub-nav-title text-white">Connect to Stream Service Without Stream Layer</h1>
+        </div>
+      </header>
+      <div class="grid-container">
+        <main class="column-24">
+            <div class="leader-1 column-24">
+              <div class="column-3 content-bold">Websocket url: </div>
+              <span id="txtSocketHost" class="column-21 text-red"></span>
+            </div>
+          <div class="leader-half column-24">
+            <span class="column-3">&nbsp</span>
+            <div class="column-4">
+              <button id="cmdConnect" class="btn">Connect Websocket</button>
+            </div>
+            <div class="column-4">
+              <button id="cmdDisconnect" class="btn btn-disabled">Disconnect Websocket</button>
+            </div>
+          </div>
+          <div class="leader-0">
+            <div class="column-24 leader-1">
+              <div class="content-bold">Messages Received</div>
+              <textarea id="txtLog" class="column-24" rows="10"></textarea>
+              <button id="cmdClear" class="btn btn-green btn-disabled right">Clear Messages</button>
+            </div>
+          </div>
+        </main>
       </div>
     </div>
   </body>
+
+  <script>
+    var connection,
+        msgcount = 0;
+
+    var url = "ws://EC2-75-101-155-202.COMPUTE-1.AMAZONAWS.COM:6180/arcgis/ws/services/ASDITrackInformation/StreamServer/subscribe";
+    document.getElementById("txtSocketHost").innerHTML = url;
+
+    document.getElementById("cmdConnect").addEventListener("click", connectSocket);
+    document.getElementById("cmdDisconnect").addEventListener("click", disconnectSocket);
+    document.getElementById("cmdClear").addEventListener("click", clearLog);
+
+    function connectSocket(){
+      //check if browser supports web sockets
+      if ("WebSocket" in window){
+        try{
+          //get web socket url and make new WebSocket using url entered in textbox
+          var host = document.getElementById("txtSocketHost").innerHTML;
+          connection = new WebSocket(host);
+
+          //handle web socket's events
+          connection.onopen = function(){
+            setUI(true);
+            addToLog("Opened Web Socket");
+          };
+          connection.onclose = function(m){
+            setUI(false);
+            addToLog("Closed web socket: " + JSON.stringify(m));
+            msgcount = 0;
+          };
+          connection.onerror = function(err){
+            setUI(false);
+            msgcount = 0;
+            addToLog("Error: " + JSON.stringify(err));
+            console.log("Error: ", err);
+          };
+
+          /*
+           * onmessage gets an object that has a data property that contains the actual message.
+           */
+          connection.onmessage = function(e){
+            var msg = JSON.parse(e.data);
+            addToLog("Message received: " + JSON.stringify(msg));
+          };
+        }
+        catch(err){
+          addToLog("Error creating websocket connection: " + err.toString());
+        }
+      }
+      else{
+        addToLog("WebSocket not supported");
+      }
+    }
+
+    function disconnectSocket(){
+      connection.close();
+    }
+
+    function clearLog(){
+      txtLog.value = "";
+    }
+
+    function addToLog(msg){
+      txtLog.value = txtLog.value + "\n\n" + msgcount + ": " + msg;
+      msgcount++;
+    }
+
+    //change UI to reflect connected or disconnected state
+    function setUI(connected) {
+      document.getElementById("cmdDisconnect").disabled = !connected;
+      document.getElementById("cmdConnect").disabled = connected;
+      document.getElementById("cmdClear").disabled = !connected;
+
+      document.getElementById("cmdDisconnect").classList.toggle("btn-disabled");
+      document.getElementById("cmdConnect").classList.toggle("btn-disabled");
+      document.getElementById("cmdClear").classList.toggle("btn-disabled");
+
+      if (connected) {
+        document.getElementById("txtSocketHost").classList.add("text-green");
+        document.getElementById("txtSocketHost").classList.remove("text-red");
+      }
+      else {
+        document.getElementById("txtSocketHost").classList.remove("text-green");
+        document.getElementById("txtSocketHost").classList.add("text-red");
+      }
+    }
+    </script>
+  </head>
 </html>

@@ -1,46 +1,84 @@
-<doctype html>
-<html>
+﻿<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Sample Stream Layer and Stream Service Applications</title>
+  <meta charset="utf-8">
+  <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+  <meta name="viewport" content="width=device-width, user-scalable=no">
+  <title>Dev Summit 2016</title>
+  <link rel="shortcut icon" href="assets/img/favicon.ico">
+  <link rel="stylesheet" href="assets/css/all.css">
+  <link rel="stylesheet" href="https://js.arcgis.com/3.16/esri/css/esri.css">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <script>window.dojoConfig = {async: true};</script>
+  <script src="https://js.arcgis.com/3.16/"></script>
 </head>
 <body>
-  <h2>Sample Esri Stream Layer Applications</h2>
-  <ul>
-    <li>
-      <a href="http://jcardonadcdev.github.io/DevSummit2016-realtime/streamlayer.html" target="_blank">
-        Map with basemap and stream layer
-      </a>
-    </li>
-    <li>
-      <a href="http://jcardonadcdev.github.io/DevSummit2016-realtime/simplewebsocket.html" target="_blank">
-        WebSocket connection to stream service
-      </a>
-    </li>
-    <li>
-      <a href="http://jcardonadcdev.github.io/DevSummit2016-realtime/filtering.html" target="_blank">
-        Filtering a stream layer
-      </a>
-    </li>
-    <li>
-      <a href="http://jcardonadcdev.github.io/DevSummit2016-realtime/temporal-renderers.html" target="_blank">
-        Showing tracks with a temporal renderer
-      </a>
-    </li>
-    <li>
-      <a href="http://jcardonadcdev.github.io/DevSummit2016-realtime/message-event.html" target="_blank">
-        Using the stream layer's message event
-      </a>
-    </li>
-    <li>
-      <a href="http://jcardonadcdev.github.io/DevSummit2016-realtime/gauges.html" target="_blank">
-        Static geometries with changing attributes
-      </a>
-    </li>
-    <li>
-      <a href="http://jcardonadcdev.github.io/DevSummit2016-realtime/streamlayer3d.html" target="_blank">
-        3d: Stream layer in a scene view
-      </a>
-    </li>
-  </ul>
+  <div class="wrapper">
+    <div class="drawer drawer-left js-drawer" data-drawer="top-nav">
+      <nav class="drawer-nav">
+        <aside class="side-nav">
+          <h2 class="side-nav-title padding-leader-half padding-trailer-half text-large">Esri Patterns</h2>
+          <div class="panel padding-trailer-half padding-leader-half">
+            <label class="trailer-0">
+              <input type='search' placeholder='Search'>
+            </label>
+          </div>
+          <a href="#" class="side-nav-link padding-trailer-half padding-leader-half">Branding</a>
+          <a href="../../" class="side-nav-link padding-trailer-half padding-leader-half">Web</a></a>
+          <a href="#" class="side-nav-link padding-trailer-half padding-leader-half">Mobile</a>
+          <a href="#" class="side-nav-link padding-trailer-half padding-leader-half">Presentations</a>
+        </aside>
+      </nav>
+    </div>
+    <div class="drawer drawer-right js-drawer" data-drawer="user-nav">
+      <nav class="drawer-nav">
+        <aside class="side-nav">
+          <h2 class="side-nav-title padding-leader-half padding-trailer-half text-large">Sloth Aldrin</h2>
+          <a href="#" class="side-nav-link padding-trailer-half padding-leader-half">User Settings</a>
+          <a href="#" class="side-nav-link padding-trailer-half padding-leader-half">Logout</a>
+        </aside>
+      </nav>
+    </div>
+    <header class="top-nav">
+      <a class="skip-to-content" href="#skip-to-content">Skip To Content</a>
+      <div class="grid-container">
+        <div class="column-24">
+          <a href="index.html" class="top-nav-title tablet-hide">Esri Developer Summit 2016</a>
+          <a href="/" class="icon-ui-menu top-nav-title js-drawer-toggle tablet-show" data-drawer="top-nav">Esri Developer Summit 2016</a>
+        </div>
+      </div>
+    </header>
+    <header class="sub-nav">
+      <div class="grid-container">
+        <h1 class="sub-nav-title text-white">Real-Time GIS: Leveraging Stream Services </h1>
+      </div>
+    </header>
+
+    <div class="grid-container leader-1">
+      <main class="column-22 pre-1">
+       <h3>Viewing Real-Time Data using Stream Services and Stream Layers</h3>
+       <h5>Some sample applications...</h5>
+       <ul id="demoLinkList" class="font-size-2">
+         <li style="list-style: none"><a id="simplewebsocketTab" href="#">Simple WebSocket</a></li>
+         <li style="list-style: none"><a id="streamlayerTab" href="#">Basic Stream Layer</a></li>
+         <li style="list-style: none"><a id="filteringTab" href="#">Applying Filters</a></li>
+         <li style="list-style: none"><a id="messageTab" href="#">Using Message Event</a></li>
+         <li style="list-style: none"><a id="gaugesTab" href="#">Static Sensors with Changing Attributes</a></li>
+         <li style="list-style: none"><a id="3dTab" href="#">Stream Layer in 3D</a></li>
+       </ul>
+       <div id="graphDiv"></div>
+      </main>
+    </div>
+  </div> <!-- Wrapper Div Close -->
+
+  <!-- Footer Pattern-->
+  <footer class="footer leader-0">
+    <div class="grid-container text-darker-gray link-dark-gray">
+      <h2>Thanks for Coming!</h2>
+    </div>
+  </footer>
+  <script src="assets/js/calcite-web.js"></script>
+  <script src="js/main.js"></script>
+
 </body>
 </html>
