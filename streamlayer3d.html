@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no"/>
     <title>Stream Layer 4-3D</title>
-    <link rel="stylesheet" href="https://js.arcgis.com/4.0beta3/esri/css/main.css"/>
+    <link rel="stylesheet" href="https://js.arcgis.com/4.4/esri/css/main.css"/>
     <style type="text/css">
       html, body {
         height: 100%; width: 100%;
@@ -39,7 +39,7 @@
       }
     </style>
 
-    <script src="https://js.arcgis.com/4.0beta3/"></script>
+    <script src="https://js.arcgis.com/4.4/"></script>
 
     <script>
       var layerView;
@@ -66,7 +66,7 @@
                   on, dom, domClass){
 
         var slayer,
-            controller;
+            layerView;
 
         dom.byId("txtUrl").value = "http://ec2-75-101-155-202.compute-1.amazonaws.com:6080/arcgis/rest/services/WorldSatellites/StreamServer";
 
@@ -84,8 +84,6 @@
 
         function connect(){
           if(slayer){
-            console.log("layer exists. just reconnecting");
-            slayer.connect();
             return;
           }
 
@@ -134,41 +132,47 @@
             renderer: objectSymbolRenderer
           });
 
-          slayer.then(null, function(err){
-            console.log("layer error: ", err);
-          });
-
-          // Get controller when it is created.
-          //  Controller emits connect/disconnect events
-          slayer.on("graphics-controller-create", function(evt){
-            controller = evt.graphicsController;
-            controller.on("connect", function(){
-              domClass.replace("txtUrl", "connected", "disconnected");
-              dom.byId("cmdConnect").disabled = true;
-              dom.byId("cmdRemove").disabled = false;
-            });
-            controller.on("disconnect", function(evt){
-              domClass.replace("txtUrl", "disconnected", "connected");
-              dom.byId("cmdConnect").disabled = false;
-              dom.byId("cmdRemove").disabled = true;
-            });
-          });
-
           map.add(slayer);
-        }
 
-        function disconnect(){
-          if(controller) {
-            controller.disconnect();
-          }
+          sceneView.whenLayerView(slayer)
+            .then(function(response) {
+              layerView = response;
+
+              layerView.watch("connectionError", function(newVal, oldVal) {
+                console.log("connectionError changed - newVal: ", newVal);
+              });
+
+              layerView.watch("connectionStatus", function(newValue, oldValue) {
+                var connected = newValue === "connected";
+
+                setUI(connected);
+              });
+            })
+            .otherwise(function(err) {
+              console.log("error making layerview: ", err);
+            });
         }
 
         function removeLayer(){
-          if(controller){
-            controller.disconnect();
+          if (slayer) {
             map.remove(slayer);
+            setUI(false);
+
             slayer = null;
-            controller = null;
+            layerView = null;
+          }
+        }
+
+        function setUI(connected) {
+          if (connected) {
+            domClass.replace("txtUrl", "connected", "disconnected");
+            dom.byId("cmdConnect").disabled = true;
+            dom.byId("cmdRemove").disabled = false;
+          }
+          else {
+            domClass.replace("txtUrl", "disconnected", "connected");
+            dom.byId("cmdConnect").disabled = false;
+            dom.byId("cmdRemove").disabled = true;
           }
         }
       });
