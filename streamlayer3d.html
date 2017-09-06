@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no"/>
     <title>Stream Layer 4-3D</title>
-    <link rel="stylesheet" href="https://js.arcgis.com/4.0/esri/css/main.css"/>
+    <link rel="stylesheet" href="https://js.arcgis.com/4.4/esri/css/main.css"/>
     <link rel="shortcut icon" href="./assets/img/favicon.ico">
     <link rel="stylesheet" href="./assets/css/all.css">
     <style type="text/css">
@@ -14,7 +14,7 @@
       }
     </style>
 
-    <script src="http://js.arcgis.com/4.0/"></script>
+    <script src="http://js.arcgis.com/4.4/"></script>
   </head>
   <body>
     <div class="wrapper">
@@ -36,7 +36,6 @@
   </body>
 
   <script>
-    var layerView;
     require([
       "esri/Map",
       "esri/views/SceneView",
@@ -60,7 +59,7 @@
                 on, dom, domClass){
 
       var streamLayer,
-          controller;
+          layerView;
 
 
       var url = "http://ec2-75-101-155-202.compute-1.amazonaws.com:6080/arcgis/rest/services/WorldSatellites/StreamServer";
@@ -135,33 +134,45 @@
           renderer: objectSymbolRenderer
         });
 
-        streamLayer.then(null, function(err){
-          console.log("layer error: ", err);
-        });
-
-        // Get controller when it is created.
-        //  Controller emits connect/disconnect events
-        streamLayer.on("graphics-controller-create", function(evt){
-          controller = evt.graphicsController;
-          controller.on("connect", function(){
-            dom.byId("cmdToggleStream").innerHTML = "Stop Stream";
-            domClass.replace("cmdToggleStream", "btn btn-green btn-arrow right", "btn btn-red btn-arrow right");
-          });
-          controller.on("disconnect", function(evt){
-            dom.byId("cmdToggleStream").innerHTML = "Start Stream";
-            domClass.replace("cmdToggleStream", "btn btn-red btn-arrow right", "btn btn-green btn-arrow right");
-          });
-        });
-
         map.add(streamLayer);
+
+        sceneView.whenLayerView(streamLayer)
+          .then(function(response) {
+            layerView = response;
+
+            layerView.watch("connectionError", function(newVal, oldVal) {
+              console.log("connectionError changed - newVal: ", newVal);
+            });
+
+            layerView.watch("connectionStatus", function(newValue, oldValue) {
+              var connected = newValue === "connected";
+
+              setUI(connected);
+            });
+          })
+          .otherwise(function(err) {
+            console.log("error making layerview: ", err);
+          });
       }
 
       function disconnectStreamLayer(){
-        if(controller){
-          controller.disconnect();
+        if (streamLayer) {
           map.remove(streamLayer);
+          setUI(false);
+
           streamLayer = null;
-          controller = null;
+          layerView = null;
+        }
+      }
+
+      function setUI(connected) {
+        if (connected) {
+          dom.byId("cmdToggleStream").innerHTML = "Stop Stream";
+          domClass.replace("cmdToggleStream", "btn btn-green btn-arrow right", "btn btn-red btn-arrow right");
+        }
+        else {
+          dom.byId("cmdToggleStream").innerHTML = "Start Stream";
+          domClass.replace("cmdToggleStream", "btn btn-red btn-arrow right", "btn btn-green btn-arrow right");
         }
       }
     });
