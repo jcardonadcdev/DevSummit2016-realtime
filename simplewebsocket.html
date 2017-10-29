@@ -25,17 +25,7 @@
           </aside>
         </nav>
       </div>
-      <div class="drawer drawer-right js-drawer" data-drawer="user-nav">
-        <nav class="drawer-nav">
-          <aside class="side-nav">
-            <h2 class="side-nav-title padding-leader-half padding-trailer-half text-large">Sloth Aldrin</h2>
-            <a href="#" class="side-nav-link padding-trailer-half padding-leader-half">User Settings</a>
-            <a href="#" class="side-nav-link padding-trailer-half padding-leader-half">Logout</a>
-          </aside>
-        </nav>
-      </div>
       <header class="top-nav">
-        <a class="skip-to-content" href="#skip-to-content">Skip To Content</a>
         <div class="grid-container">
           <div class="column-24">
             <a href="./index.html" class="top-nav-title tablet-hide">Esri Developer Summit 2016</a>
@@ -52,7 +42,6 @@
         <main class="column-24">
             <div class="leader-1 column-24">
               <div class="column-3 content-bold">Websocket url: </div>
-              <!--<input type="text" id="txtSocketHost" class="column-21 text-white" />-->
               <span id="txtSocketHost" class="column-21 text-red"></span>
             </div>
           <div class="leader-half column-24">
@@ -143,7 +132,7 @@
     }
 
     //change UI to reflect connected or disconnected state
-    function setUI(connected){
+    function setUI(connected) {
       document.getElementById("cmdDisconnect").disabled = !connected;
       document.getElementById("cmdConnect").disabled = connected;
       document.getElementById("cmdClear").disabled = !connected;
@@ -152,14 +141,15 @@
       document.getElementById("cmdConnect").classList.toggle("btn-disabled");
       document.getElementById("cmdClear").classList.toggle("btn-disabled");
 
-      if (connected){
+      if (connected) {
         document.getElementById("txtSocketHost").classList.add("text-green");
         document.getElementById("txtSocketHost").classList.remove("text-red");
       }
-      else{
+      else {
         document.getElementById("txtSocketHost").classList.remove("text-green");
         document.getElementById("txtSocketHost").classList.add("text-red");
       }
     }
-  </script>
+    </script>
+  </head>
 </html>
