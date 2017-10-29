@@ -13,12 +13,12 @@ The samples:
 * *streamlayer3d.html* - A Stream Layer rendered in 3D in a Scene View. Uses the 4.0 JavaScript API.
 
 ## View samples
-The samples can be viewed [here] (http://jcardonadcdev.github.io/DevSummit2016-realtime/). The sample applications in the main branch do not use the styling that the live demos use. The samples in the main branch are meant to show example code, not to look pretty.
+The samples can be viewed [here] (https://jcardonadcdev.github.io/DevSummit2016-realtime/). The sample applications in the main branch do not use the styling that the live demos use. The samples in the main branch are meant to show example code, not to look pretty.
 
 ## Links
 * [3.x Stream Layer Documentation] (https://developers.arcgis.com/javascript/jsapi/streamlayer-amd.html)
 * [4.x Stream Layer Documentation] (https://developers.arcgis.com/javascript/beta/api-reference/esri-layers-StreamLayer.html). **Beta**
 * Sample Stream Services with simulated data
   * [Server maintained by GeoEvent team] (https://geoeventsample3.esri.com:6443/arcgis/rest/)
-  * [Server maintained by me] (http://ec2-75-101-155-202.compute-1.amazonaws.com:6080/arcgis/rest/services)
+  * [Server maintained by me] (https://idt-gepsample.dc.esri.com:6443/arcgis/rest/services)
 
