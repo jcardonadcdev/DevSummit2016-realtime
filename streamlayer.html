@@ -4,10 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no"/>
   <title>StreamLayer-Simple</title>
-  <link rel="stylesheet" href="http://js.arcgis.com/3.16/esri/css/esri.css">
+  <link rel="stylesheet" href="https://js.arcgis.com/3.20/esri/css/esri.css">
   <link rel="shortcut icon" href="./assets/img/favicon.ico">
   <link rel="stylesheet" href="./assets/css/all.css">
-  <script src="https://js.arcgis.com/3.16/"></script>
+  <script src="https://js.arcgis.com/3.20/"></script>
 </head>
 <body class="tundra">
   <div class="wrapper">
@@ -78,11 +78,7 @@
   ], function(
       Map, InfoTemplate, StreamLayer,
       dom, domClass, on){
-<<<<<<< HEAD
       var url = "https://idt-gepsample.dc.esri.com:6443/arcgis/rest/services/ASDITrackInformation/StreamServer";
-=======
-      var url = "http://ec2-75-101-155-202.compute-1.amazonaws.com:6080/arcgis/rest/services/ASDITrackInformation/StreamServer";
->>>>>>> 43625794a9512ddd921aaa15221b3da9809745a1
       var streamLayer;
 
       dom.byId("urlLink").href = url;
