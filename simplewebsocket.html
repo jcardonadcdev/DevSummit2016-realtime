@@ -80,7 +80,7 @@
     var connection,
         msgcount = 0;
 
-    var url = "ws://EC2-75-101-155-202.COMPUTE-1.AMAZONAWS.COM:6180/arcgis/ws/services/AsdiTracks/StreamServer/subscribe";
+    var url = "wss://IDT-GEPSAMPLE.DC.ESRI.COM:6143/arcgis/ws/services/ASDITrackInformation/StreamServer/subscribe";
     document.getElementById("txtSocketHost").innerHTML = url;
 
     document.getElementById("cmdConnect").addEventListener("click", connectSocket);
